@@ -41,10 +41,10 @@ public class BallApp extends Application {
 	private ObservableList<Ball> balls = FXCollections.observableArrayList();
 	private GravAndBounce gb;
 	private static final double MIN_RADIUS = 5;
-	private static final double MAX_RADIUS = 15;
+	private static final double MAX_RADIUS = 40;
 	private static final double MIN_SPEED = 50;
 	private static final double MAX_SPEED = 950;
-	private boolean clicki = true;
+	private boolean clicki = true, planeteChoose = false;
 	
 	@Override
 	public void start(Stage primaryStage) throws Exception {
@@ -65,27 +65,49 @@ public class BallApp extends Application {
 			@Override
 			public void handle(ActionEvent event) {
 				// TODO Auto-generated method stub
-				gb.onOffPlanet();
-				gb.speedup();
+				
+//				gb.onOffPlanet();
+//				
+//				
+				System.out.println(c().toString());
+		
+				
+				planet.setStyle(String.format("-fx-color: %s", c().toString().replaceAll("0x","#") ));
+				
+				planeteChoose = true;
+				
 			}
 		});
 		ballContainer.setOnMouseClicked(new EventHandler<MouseEvent>() {
 
 			@Override
 			public void handle(MouseEvent e) {
-				Random ra = new Random();
-				double radius = MIN_RADIUS + (MAX_RADIUS-MIN_RADIUS) * ra.nextDouble();
-	            double mass = Math.pow((radius / 40), 3);
-	            
-	            final double speed = MIN_SPEED + (MAX_SPEED - MIN_SPEED) * ra.nextDouble();
-	            final double angle = 2 * PI * ra.nextDouble();
 				
-				double x = e.getX();
-				double y = e.getY();
-				Ball b = new Ball(x, y, radius, speed*cos(angle), speed*sin(angle), mass);
+				if(planeteChoose){
+					gb.setPlanet(new double[]{e.getX(),e.getY()});
+					planeteChoose = false;
+					gb.onOffPlanet();
+					gb.speedup();
+					planet.setStyle("-fx-color: white");
+					
+				}else{
+					
+					Random ra = new Random();
+					double radius = MIN_RADIUS + (MAX_RADIUS-MIN_RADIUS) * ra.nextDouble();
+		            double mass = Math.pow((radius / 40), 3);
+		            
+		            final double speed = MIN_SPEED + (MAX_SPEED - MIN_SPEED) * ra.nextDouble();
+		            final double angle = 2 * PI * ra.nextDouble();
+					
+					double x = e.getX();
+					double y = e.getY();
+					Ball b = new Ball(x, y, radius, speed*cos(angle), speed*sin(angle), mass);
+					
+					b.getView().setFill(c());
+					balls.add(b);
+				}
 				
-				b.getView().setFill(c());
-				balls.add(b);
+				
 				
 				
 			}

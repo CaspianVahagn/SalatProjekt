@@ -28,7 +28,12 @@ public class GravAndBounce {
 	public void onOffPlanet() {
 		PlanetMode = !PlanetMode;
 	}
-
+	/**
+	 * 
+	 * @param elapsedTime vergangene zeit innerhalb der Timeline
+	 * Unterschiede falls Planet modus aktiviert(true) ist. Repositionierung der Bälle und der Pixel die sie sich Pro Timeline
+	 * Frame bewegen sollen.
+	 */
 	private void updatePhysics(long elapsedTime) {
 		double elapsedSeconds = elapsedTime / 1_000_000_000.0;
 		for (Ball b : balls) {
@@ -75,7 +80,11 @@ public class GravAndBounce {
 		}
 
 	}
-
+	/**
+	 * 
+	 * @param ballContainer gibt nur die Pane die die Bälle anthält herein und überprüft ob bälle die Wände berüen
+	 * 
+	 */
 	public void startAnimation(final Pane ballContainer) {
 		final LongProperty lastUpdateTime = new SimpleLongProperty(0);
 		final AnimationTimer timer = new AnimationTimer() {
@@ -93,10 +102,20 @@ public class GravAndBounce {
 		};
 		timer.start();
 	}
-
+	/**
+	 * 
+	 * @param b1 ball 1 
+	 * @param b2 ball 2
+	 * @param deltaX die Differenz der Ballzenten für X koordinaten
+	 * @param deltaY die Differenz der Ballzenten für y koordinaten
+	 * Berechnet den Aufprallwinkel und Abprallwinkel und die Neue geschwindikeit und der beiden Bälle
+	 * 
+	 * Fass nicht an wenn du irgendwas daran ändert Töte ich die Zukunfts Ich !
+	 */
 	private void bounce(final Ball b1, final Ball b2, final double deltaX, final double deltaY) {
-		final double distance = sqrt(deltaX * deltaX + deltaY * deltaY);
-		final double unitContactX = deltaX / distance;
+		
+		final double distance = sqrt(deltaX * deltaX + deltaY * deltaY); // Satz des Pythagoras
+		final double unitContactX = deltaX / distance; //Kontaktpunkt berechnen 
 		final double unitContactY = deltaY / distance;
 
 		final double xVelocity1 = b1.getXVelocity();
@@ -117,13 +136,14 @@ public class GravAndBounce {
 		 */
 																			
 		final double massSum = b1.getMass() + b2.getMass();
-		final double massDiff = b1.getMass() - b2.getMass();
+		final double massDiff = b1.getMass() - b2.getMass(); // 
 
 		final double v1 = (2 * b2.getMass() * u2 + u1 * massDiff) / massSum; 
 		/**
 		 *  Diese Gelsicungen benötugt man für die Berechnung eindimensionaler
 		 *  Kollisionen siehe gleichen für Erhaltung von Moment und konservierung
-		 *  von Energie																		
+		 *  von Energie.
+		 *  																		
 		 */
 		final double v2 = (2 * b1.getMass() * u1 - u2 * massDiff) / massSum; 
 		
@@ -148,11 +168,15 @@ public class GravAndBounce {
 		b2.setYVelocity((v2 * unitContactY + u2PerpY) * IMPULS_FACTOR);
 
 	}
-
+	/**
+	 * 
+	 * @param maxX Pane x Größe (Breite)
+	 * @param maxY pane Y größe (Höhe)
+	 */
 	private void checkCollisions(double maxX, double maxY) {
 		for (ListIterator<Ball> slowIt = balls.listIterator(); slowIt.hasNext();) {
 			Ball b1 = slowIt.next();
-			// check wall collisions:
+			
 			double xVel = b1.getXVelocity();
 			double yVel = b1.getYVelocity();
 			if ((b1.getCenterX() - b1.getRadius() <= 0 && xVel < 0)
@@ -186,6 +210,8 @@ public class GravAndBounce {
 		 * 	if s^2 < (r1 + r2)^2
 		 * 	d/dt(s^2) < 0: Ableitung Whohoo
 		 * 	2(x2-x1)(x2'-x1') + 2(y2-y1)(y2'-y1') < 0
+		 *  
+		 *  i cry
 		 */
 		final double radiusSum = b1.getRadius() + b2.getRadius();
 		if (deltaX * deltaX + deltaY * deltaY <= radiusSum * radiusSum) {

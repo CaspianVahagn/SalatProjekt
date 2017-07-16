@@ -15,11 +15,11 @@ import javafx.scene.shape.Shape;
 
 public class Ball {
 	
-	private final DoubleProperty xVelocity; // pixels per second
-	private final DoubleProperty yVelocity;
+	private final DoubleProperty xVelocity; // pixel pro sekunde
+	private final DoubleProperty yVelocity; // selbe nür y Koordinaten
 	private final ReadOnlyDoubleWrapper speed;
-	private final double mass; // arbitrary units
-	private final double radius; // pixels
+	private final double mass; // Masse repräsentant 
+	private final double radius; // Ballgröße
 
 	private final Circle view;
 
